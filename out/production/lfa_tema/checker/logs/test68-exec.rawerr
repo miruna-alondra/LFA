@@ -1,0 +1,6 @@
+Exception in thread "main" java.util.EmptyStackException
+	at java.base/java.util.Stack.peek(Stack.java:101)
+	at java.base/java.util.Stack.pop(Stack.java:83)
+	at Interpreter.interpreter(Interpreter.java:106)
+	at Main.main(Main.java:28)
+make: *** [Makefile:13: run] Error 1
