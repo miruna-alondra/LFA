@@ -8,14 +8,12 @@ public class Interpreter {
     public HashMap<Character, Integer> hashMap = new HashMap<>();
     public ArrayList<Integer> sentCodes = new ArrayList<>();
     public ArrayList<String> commands = new ArrayList<>();
-    public ArrayList<String> loops = new ArrayList<>();
-    public boolean jump = false;
-    public int openBracePos = 0;
-    public int closedBracePos = 0;
+    public static boolean jump = false;
 
     public Interpreter(String input) {
         this.input = input;
     }
+
     public void split() {
         int counter = 0;
         int code = 0;
@@ -38,6 +36,16 @@ public class Interpreter {
         }
     }
 
+    public static String convertInteger(String theValue, int initialBase, int finalBase) {
+
+        BigInteger bigInteger = new BigInteger(theValue, initialBase);
+        String value = bigInteger.toString(finalBase);
+        value = value.toUpperCase();
+
+
+        return value;
+    }
+
     public void getStrings() {
         for (int i = 0; i < input.length(); i += 4) {
             String aux = String.valueOf(sentCodes.get(i)) + String.valueOf(sentCodes.get(i + 1))
@@ -46,21 +54,7 @@ public class Interpreter {
         }
 
     }
-    public void findBraces(ArrayList<String> commands) {
-        for (int i = 0; i < commands.size(); i++) {
-            if (commands.get(i).equals("0110")) {
-                openBracePos = i;
-            }
-            if (commands.get(i).equals("0123")) {
-                closedBracePos = i;
-            }
-        }
-        for (int i = openBracePos + 1; i < closedBracePos; i++) {
-            loops.add(commands.get(i));
-        }
-        System.out.println(loops);
 
-    }
 
     public void interpreter(String str, int i) {
         switch (str) {
@@ -72,7 +66,8 @@ public class Interpreter {
             case "0111":
                 if (!jump) {
                     if (!Main.stack.isEmpty()) {
-                        System.out.println(Main.stack.pop());
+                        String smth = Main.stack.pop().toString();
+                        System.out.println(this.convertInteger(smth, 10, Main.base));
                     } else {
                         System.err.println("Exception:" + i);
                         System.exit(-2);
@@ -82,9 +77,10 @@ public class Interpreter {
             case "0000":    break;
             case "0001":
                 if (!jump) {
-                    if (Main.scStdin.hasNextBigInteger()) {
-                        BigInteger aux = Main.scStdin.nextBigInteger();
-                        Main.stack.add(aux);
+                    if (Main.scStdin.hasNext()) {
+                        String aux = Main.scStdin.next();
+                        BigInteger number = new BigInteger(convertInteger(aux, Main.base, 10));
+                        Main.stack.add(number);
                     } else {
                         System.err.println("Exception:" + i);
                         System.exit(-2);
@@ -268,59 +264,32 @@ public class Interpreter {
                 commands.add(i + 1, aux2);
             }
                             break;
-            /*case "0110":    Main.braces.push("[");
-                if (!Main.stack.isEmpty()) {
-                    jump = (Main.stack.peek() == BigInteger.ZERO);
-                    if (!jump) {
-                        for (int j = 0; j < loops.size(); j++) {
-                            this.interpreter(loops.get(j), j);
-                        }
-                    }
-                } else {
-                    System.err.println("Exception:" + i);
-                    System.exit(-2);
-                }
-                            break;
-            case "0123":
-                if (!Main.stack.isEmpty()) {
-                    Main.braces.pop();
-                    jump = (Main.stack.peek() != BigInteger.ZERO);
-                    this.findBraces(commands);
-                } else {
-                    System.err.println("Exception:" + i);
-                    System.exit(-2);
-                }
-                            break;*/
             case "0110":
                 Main.braces.push(i);
             if (!Main.stack.isEmpty()) {
-                if (Main.stack.peek() == BigInteger.ZERO) {
-                    jump = true;
-                } else {
-                    jump = false;
-                }
+                jump = (Main.stack.peek().equals(BigInteger.ZERO));
             } else {
                 System.err.println("Exception:" + i);
                 System.exit(-2);
             }
             break;
             case "0123":
+                jump = (Main.stack.peek().equals(BigInteger.ZERO));
                 if (!Main.stack.isEmpty()) {
                     if (!Main.braces.isEmpty()) {
                         int start = Main.braces.pop();
                         int end = i;
-                        if (Main.stack.peek() != BigInteger.ZERO) {
-                            jump = false;
-                        } else {
-                            jump = true;
-                        }
-                        while (Main.stack.peek() != BigInteger.ZERO) {
+                        while (!Main.stack.peek().equals(BigInteger.ZERO)) {
                             for (int j = start + 1; j < end; j++) {
                                 this.interpreter(commands.get(j), j);
                             }
                         }
+                    } else {
+                        System.out.println("Error:" + i);
+                        System.exit(-1);
                     }
                 }
+                jump = false;
                 break;
         }
     }

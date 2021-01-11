@@ -1,2 +1,5 @@
-Error:8
-make: *** [Makefile:13: run] Error 255
+Exception in thread "main" java.util.EmptyStackException
+	at java.base/java.util.Stack.peek(Stack.java:101)
+	at Interpreter.interpreter(Interpreter.java:284)
+	at Main.main(Main.java:35)
+make: *** [Makefile:13: run] Error 1

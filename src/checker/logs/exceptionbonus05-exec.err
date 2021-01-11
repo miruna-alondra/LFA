@@ -1,1 +1,4 @@
-Exception:2
+Exception in thread "main" java.util.EmptyStackException
+	at java.base/java.util.Stack.peek(Stack.java:101)
+	at Interpreter.interpreter(Interpreter.java:290)
+	at Main.main(Main.java:35)

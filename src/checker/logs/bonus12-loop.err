@@ -1,8 +1,7 @@
-Exception in thread "main" java.lang.NumberFormatException: For input string: "9" under radix 2
+Exception in thread "main" java.lang.NumberFormatException: For input string: "896FVJ" under radix 29
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
 	at java.base/java.lang.Integer.parseInt(Integer.java:652)
-	at java.base/java.math.BigInteger.<init>(BigInteger.java:536)
+	at java.base/java.math.BigInteger.<init>(BigInteger.java:545)
 	at Interpreter.convertInteger(Interpreter.java:44)
 	at Interpreter.interpreter(Interpreter.java:88)
 	at Main.main(Main.java:35)
-make: *** [Makefile:13: run] Error 1

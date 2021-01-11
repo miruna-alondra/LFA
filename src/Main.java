@@ -7,16 +7,17 @@ public class Main {
     public static Stack<BigInteger> stack = new Stack<>();
     public static Interpreter interpreter;
     public static Scanner scStdin = new Scanner(System.in);
-    public static boolean isOpen = false;
-    public static String readLine = new String();
+    public static String readLine;
     public static Stack<Integer> braces = new Stack<>();
+    public static int base = 10;
+
     public static void main(String[] args) throws Exception
     {
-        // pass the path to the file as a parameter
-        File file =
+       File file =
                new File(args[0]);
-        /*File file = new File("C:\\Users\\ASUS\\Desktop\\lfa_tema\\src\\checker\\tests\\test71" +
-             "-loop.gly");*/
+       if (args.length > 1) {
+           base = Integer.parseInt(args[1]);
+       }
         Scanner sc = new Scanner(file);
         while (sc.hasNextLine()) {
             readLine = sc.nextLine();
@@ -25,7 +26,6 @@ public class Main {
         if (readLine.length() % 4 == 0) {
             interpreter.split();
             interpreter.getStrings();
-            //System.out.println(interpreter.commands);
             for (int i = 0; i < interpreter.commands.size(); i++) {
                 interpreter.interpreter(interpreter.commands.get(i), i);
             }
